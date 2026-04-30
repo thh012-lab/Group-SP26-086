@@ -1,0 +1,109 @@
+COGS 108 Project Proposal
+Overwatch 2: Does Pro Meta Diversity Correlate with Player Count?
+
+Authors
+Member 1: Ethan Choi
+Member 2: Peerless Dang: Analysis, Project administration, Writing – original draft
+Member 3: TonyHaoran Huang
+Member 4:
+Member 5
+
+Research Question
+Does the diversity of the professional Overwatch 2 meta, measured by hero pick rate entropy across Overwatch Champions Series (OWCS) tournaments, correlate with changes in the game's monthly active player count? Specifically, we ask: do seasons with lower hero concentration (more diverse pro picks) show significantly higher or faster-growing player counts compared to seasons with a dominant, homogeneous meta?
+Our predictor variable is pro meta diversity per season (quantified using Shannon entropy applied to hero pick rate distributions from OWCS match data). Our outcome variable is monthly active player estimates, sourced from third-party trackers using ActivePlayer.io aggregated cross-platform data, aligned by season. The analysis is a statistical inference task centered on correlation and, if feasible, lagged regression to test whether meta shifts precede player count changes.
+
+Background and Prior Work
+Overwatch 2 launched in October 2022 as a free-to-play title and rapidly built one of the larger hero shooter player bases in the world. The game debuted with roughly 35 million players, and despite moderation through late 2024, still maintains an estimated monthly player base of around 22 million as of early 2025. This scale makes Overwatch 2 a useful subject for studying how game design and competitive health relate to sustained player engagement. PLG
+One of the most persistent complaints in the community concerns "meta staleness," meaning the tendency for only a small handful of heroes to dominate competitive play at any given time. In the 2022 OWL off-season, five heroes had over a 90% pick rate each, while every other hero in the roster sat below 10%. Historically, no off-season meta had seen any single hero exceed an 82% pick rate until that point. This extreme concentration is qualitatively different from the typical strategic metagame found in most competitive titles, and the community widely perceived it as harming the watchability and playability of the game. AFK Gaming
+The connection between pro-scene meta and casual player behavior is well-documented anecdotally. When a top OWL team ran triple-support compositions in early 2026, support pick rates climbed 3–5% across all ranks within two weeks. Conversely, when Sigma was benched in pro play for two consecutive tournaments, his pick rate dropped nearly 8% in Platinum and Diamond despite no patch changes. This trickle-down effect suggests the pro meta has measurable influence on how the broader player base engages with the game, though no formal statistical study has quantified this relationship over time. Splashworkanimations
+Prior work examining esports and player behavior has primarily focused on health outcomes of gaming rather than game design effects on retention. Kelly and Leung's 2021 scoping meta-review in Frontiers in Sports and Active Living examined 10 reviews of competitive online gaming's health impacts, but noted that the field has focused almost entirely on physical and psychological outcomes rather than game system dynamics and their effect on player populations. No published study we found directly examines whether pro meta diversity predicts player count fluctuations in a live-service game, making this a genuinely novel contribution to the esports research literature. nih
+The closest adjacent work examines esports viewership as a proxy for engagement. Esports Charts analysis of Overwatch's competitive viewership found an 88.7% growth in hours watched between the first half of 2022 and the first half of 2023, a period that coincided with the OW2 transition and significant meta shifts. While viewership and player count are not identical, they move together enough to suggest that competitive scene health has downstream effects on the wider community. Our project fills a gap by directly linking the internal structure of the pro meta (pick distribution entropy) to player count rather than using viewership as an intermediary. Esports Charts
+References:
+Kelly, S., & Leung, J. (2021). The New Frontier of Esports and Gaming: A Scoping Meta-Review of Health Impacts and Research Agenda. Frontiers in Sports and Active Living. https://doi.org/10.3389/fspor.2021.640362
+Esports Charts. (2023). Viewership analysis of popular esports COD, Halo, and Overwatch. https://escharts.com/news/cod-halo-ow-viewership-2023
+AFK Gaming. (2022). The Overwatch League Meta is the Most Stale It Has Ever Been. https://afkgaming.com/esports/news/the-overwatch-league-meta-is-the-most-stale-it-has-ever-been
+Splashwork Animations. (2026). Overwatch Pick Rates Explained: The Complete Guide to Hero Meta in 2026. https://splashworkanimations.com/overwatch-pick-rates-explained-the-complete-guide-to-hero-meta-in-2026/
+ActivePlayer.io / PLG.bet tracking. (2025). Overwatch 2 Player Count Tracker. https://plg.bet/blog/overwatch-2-player-count/
+
+Hypothesis
+We predict that seasons with higher pro meta diversity (lower hero pick rate concentration) will correlate positively with higher or growing monthly active player counts. Our reasoning is that a diverse meta signals a healthier, more accessible competitive environment, which increases spectator appeal and keeps casual players engaged with a broader pool of viable heroes. We also expect this effect to show a short lag of one to two weeks, as player behavior typically shifts shortly after a major tournament or balance patch rather than instantaneously.
+
+Data
+Ideal Dataset
+The ideal dataset has two parallel time series aligned by Overwatch 2 season (roughly nine-week intervals):
+Pro meta variable: Hero pick rates across all OWCS matches per season (heroes x matches x tournaments), from which we compute Shannon entropy as a scalar diversity score. Variables needed: hero name, number of picks, total maps played, tournament name, season, date. Ideally at least 30 seasons/sub-seasons of data covering OWL (2018–2023) and OWCS (2023–present), giving roughly 200+ tournament events.
+Player count variable: Monthly active player estimates with at minimum season-level granularity, cross-platform if possible. Variables needed: month, estimated MAU, daily peak concurrents, platform if broken out.
+Control variables: New hero release (binary), major balance patch (binary), season start/end (binary), major external competitive events (e.g., Marvel Rivals launch).
+Ideally these data are stored in a flat CSV with one row per season-week, allowing time-series regression.
+Real Datasets
+Winston's Lab (winstonslab.com): Tracks OWL and OWCS hero pick rates by tournament going back to 2017. Data is available via the site's hero statistics pages and some historical exports. This is the primary source for pro meta diversity calculations. Variables include hero, match, map, pick/ban, team, and tournament. Free to access with some scraping required for bulk export.
+Blizzard Official Hero Statistics (overwatch.blizzard.com/en-us/rates): Blizzard's own hero stats page tracks pick rates and win rates for every hero, updated with each patch, across PC, region, and rank tier. This gives ranked/casual pick rate data as a secondary variable. Access is free with no application needed; historical patch-level data requires scraping or community-maintained archives (e.g., OW2 Stats Discord). Blizzard
+ActivePlayer.io / SteamCharts: Steam player counts average around 25,000 concurrent players with peaks reaching 60,000 during major updates and events, while cross-platform estimates from ActivePlayer capture a broader picture. SteamCharts data is directly accessible via API. ActivePlayer data requires manual collection or web scraping. IconEra
+The real datasets fall short of the ideal in two ways: (1) Blizzard does not release official cross-platform MAU, so player count estimates remain third-party approximations with unknown error margins; (2) Winston's Lab data pre-OW2 uses a 6v6 format, creating a structural break in the series that requires careful handling or scope limitation to OW2 seasons only.
+
+Ethics
+A. Data Collection
+[X] A.1 Informed consent: All data used is publicly available aggregated performance data. No individual player data is collected. No informed consent issues apply.
+[X] A.2 Collection bias: SteamCharts captures PC players only and excludes consoles. ActivePlayer.io uses estimates rather than verified counts. We will note these limitations explicitly in any analysis and avoid overgeneralizing from Steam-only numbers to total player population.
+[X] A.3 Limit PII exposure: All data is at the hero/match aggregate level. No personally identifiable player information is used.
+[X] A.4 Downstream bias mitigation: No protected group data is collected or used. Not applicable for this project.
+B. Data Storage
+[X] B.1 Data security: All data is stored in a shared private GitHub repository with access limited to team members. No sensitive data requiring encryption.
+[X] B.2 Right to be forgotten: Only aggregate public game data is stored. No individual user data is present, so this is not applicable.
+[X] B.3 Data retention plan: Data and analysis files will be retained for the duration of the course and archived in the team's GitHub repository for reproducibility, then ownership transfers to team members individually.
+C. Analysis
+[X] C.1 Missing perspectives: Our analysis is limited to publicly observable game metrics. We do not consult Blizzard employees or pro players directly. We acknowledge that player count is influenced by many factors beyond meta diversity (new hero releases, marketing, competitor games), and we include control variables to partially account for this.
+[X] C.2 Dataset bias: Third-party player count estimates carry unknown confidence intervals. The SteamCharts figures dramatically undercount the true player base because they exclude Battle.net, PlayStation, and Xbox users. We will use Steam data as a relative trend indicator rather than an absolute count, and will clearly label this distinction.
+[X] C.3 Honest representation: All visualizations will include error ranges where applicable and will not imply causal claims from a correlational analysis.
+[X] C.4 Privacy in analysis: No PII is present in our dataset.
+[X] C.5 Auditability: All code will be version-controlled in GitHub, and data collection scripts will be documented so the analysis is fully reproducible.
+D. Modeling
+[X] D.1 Proxy discrimination: No demographic or protected variables are involved. Not applicable.
+[X] D.2 Fairness across groups: Not applicable for this project.
+[X] D.3 Metric selection: Shannon entropy as our diversity metric may weight rarely-played heroes differently than intended. We will test robustness using alternative concentration metrics (e.g., Herfindahl index, top-5 pick share) and report all.
+[X] D.4 Explainability: Our model is a correlation/regression, fully interpretable. Coefficients will be reported with plain-language explanations.
+[X] D.5 Communicate limitations: We will clearly state that correlation does not establish causation, that player count data is estimated, and that meta diversity is one of many factors driving player counts.
+E. Deployment
+This is an academic analysis project with no deployment. Items E.1–E.4 are not applicable.
+
+Team Expectations
+Communication: Check-ins every week via either a Discord call or an Instagram group chat. Must respond to group chat questions/messages within 24 hours, Monday-Friday.
+Work quality: If someone writes code, it must be reviewed by at least one other group member. The whole group must agree with merging into the main.
+Conflict resolution: All conflicts must be discussed in the group chat with every member’s input. If there isn't a consensus, members must take a vote, and the majority vote goes.
+Accountability: If a deadline cannot be met, notify the group at least 48 hours in advance.
+
+Project Timeline Proposal
+Meeting Date
+Time
+Completed Before Meeting
+Discuss at Meeting
+04/27
+18:00
+Read rubric; finalize research question wording
+Confirm scope, assign background research sections
+04/29
+20:00
+Background research complete; identify all data sources
+Finalize proposal draft; review ethics section as a group
+04/29
+22:00
+Edit and submit proposal; begin scraping Winston's Lab + SteamCharts
+Review scraping output; troubleshoot data gaps
+05/08
+17:00
+Data wrangled into clean CSVs; basic EDA complete
+Review EDA visualizations; confirm entropy metric approach
+05/15
+17:00
+Statistical analysis complete (correlation + lagged regression)
+Discuss findings; assign results/discussion writing
+05/27
+17:00
+Draft results and discussion written
+Full group review; finalize visualizations
+6/10
+Before 11:59 PM
+Final edits complete
+Submit final project and group surveys
+
+
